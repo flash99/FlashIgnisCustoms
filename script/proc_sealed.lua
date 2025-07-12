@@ -43,6 +43,7 @@ function Sealed.Condition(c, f, count)
                 if c == nil then return false end
 				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end -- excludes extra deck pendulum
                 local tp = c:GetControler()
+                if Duel.GetUsableMZoneCount(tp) == 0 then return false end -- cannot summon if there is not at least 1 usable zone
                 if not c:IsCanBeSpecialSummoned(e, 0, tp, tp, false, false, POS_FACEUP_ATTACK) then return false end
                 return Duel.IsExistingMatchingCard(f, tp, LOCATION_MZONE, 0, count, nil)
             end
