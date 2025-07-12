@@ -4,7 +4,7 @@ local s,id=GetID()
 
 function s.initial_effect(c)
 
-    Lunar.AddProcedure(c, 1) -- Discard 2 Spell Cards
+    Lunar.AddProcedure(c, 2) -- Discard 2 Spell Cards
 
     -- grave to hand
     local e1 = Effect.CreateEffect(c)
