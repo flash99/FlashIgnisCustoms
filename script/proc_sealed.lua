@@ -90,7 +90,7 @@ function Sealed.Operation(c)
                     function()
                         return value
                     end)
-                e1:SetReset(RESET_EVENT + RESET_LEAVE)
+                e1:SetReset(RESETS_STANDARD)
                 c:RegisterEffect(e1)
             end
 end
