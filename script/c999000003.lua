@@ -5,6 +5,8 @@ local s,id=GetID()
 
 function s.initial_effect(c)
 
+	-- Sealed summon method
+	c:EnableReviveLimit()
     Sealed.AddProcedure(c, s.sealedcon, 2) -- 2 DOGS monster
 
     -- atkup
