@@ -13,4 +13,4 @@ function Card.IsSealedSummoned(c)
 	return c:IsSummonType(SUMMON_TYPE_SEALED)
 end
 
-Debug.Message("Init message : ".. SET_TRAP_HOLE)
+Debug.Message("Init message : ".. "Hello World")

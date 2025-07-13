@@ -21,8 +21,7 @@ function s.initial_effect(c)
 
     -- Set "trap hole" normal trap
     local e2 = Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_SINGLE + EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_CHAINING)
+    e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,{id,1})
@@ -31,9 +30,21 @@ function s.initial_effect(c)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
 
+	-- Summon
+	local e3 = Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON + CATEGORY_SEARCH)
+	e3:SetType(EFFECT_TYPE_SINGLE + EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_LEAVE_FIELD)
+	e3:SetCountLimit(1, id)
+	e3:SetCondition(s.sumcon)
+	e3:SetTarget(s.sumtg)
+	e3:SetOperation(s.sumop)
+	c:RegisterEffect(e3)
+
 end
 
-s.listed_series = {SET_TRAP_HOLE}
+s.listed_series = {SET_TRAP_HOLE, SET_TRAPTRIX}
 
 -- sealed condition
 function s.sealedcon(c)
@@ -59,8 +70,8 @@ end
 
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
     local tc = e:GetHandler()
-    local tp = tc:GetOwner()
-	return Duel.IsExistingMatchingCard(s.setfilter, tp, LOCATION_GRAVE, 0, 1, nil)
+    local ep = tc:GetOwner() -- ep = effect player
+	return Duel.IsMainPhase() and Duel.IsTurnPlayer(ep) and Duel.IsExistingMatchingCard(s.setfilter, ep, LOCATION_GRAVE, 0, 1, nil)
 end
 
 -- Check for "Trap Hole" normal trap
@@ -85,11 +96,38 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 
         local e1 = Effect.CreateEffect(tc)
 	    e1:SetType(EFFECT_TYPE_SINGLE)
-	    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	    e1:SetProperty(EFFECT_FLAG_CARD_TARGET + EFFECT_FLAG_CANNOT_INACTIVATE + EFFECT_FLAG_CANNOT_NEGATE + EFFECT_FLAG_CANNOT_DISABLE)
 	    e1:SetRange(LOCATION_MZONE)
-	    e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	    e1:SetCondition(s.immcon)
-	    e1:SetValue(s.efilter)
+	    e1:SetCode(EFFECT_TO_GRAVE_REDIRECT)
+	    e1:SetValue(LOCATION_REMOVED)
+		e1:SetReset(RESET_EVENT + RESETS_STANDARD - RESET_TOFIELD)
 	    tc:RegisterEffect(e1)
+	end
+end
+
+-- filter for "Traptrix" monster in GY
+function s.sumfilter(c, tp)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(SET_TRAPTRIX)
+end
+
+
+function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
+    local tc = e:GetHandler()
+    local tp = tc:GetOwner()
+	return tc:IsSealedSummoned() and Duel.GetUsableMZoneCount(tp) > 0 and Duel.IsExistingMatchingCard(s.sumfilter, tp, LOCATION_GRAVE, 0, 1, nil, tp)
+end
+
+
+function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.sumfilter, tp, LOCATION_GRAVE, 0, 1, nil) end
+	Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, nil, 1, tp, LOCATION_GRAVE)
+end
+
+
+function s.sumop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+	local g = Duel.SelectMatchingCard(tp, s.sumfilter, tp, LOCATION_GRAVE, 0, 1, 2, nil)
+	if #g > 0 then
+        Duel.SpecialSummon(g, SUMMON_TYPE_SPECIAL, tp, tp, 0, 0, POS_FACEUP)
 	end
 end

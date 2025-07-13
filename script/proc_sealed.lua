@@ -91,7 +91,7 @@ function Sealed.Operation(c)
                     function()
                         return value
                     end)
-                e1:SetReset(RESET_EVENT + RESET_LEAVE)
+                e1:SetReset(RESET_EVENT + RESETS_STANDARD - RESET_TOFIELD)
                 c:RegisterEffect(e1)
             end
 end
