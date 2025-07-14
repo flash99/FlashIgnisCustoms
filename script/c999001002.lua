@@ -21,7 +21,6 @@ function s.initial_effect(c)
 
     -- Activate "trap hole" normal trap from deck
     local e2 = Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -170,7 +169,7 @@ end
 
 -- "trap hole" trap filer
 function s.trapfilter(c)
-    return c:IsType(TYPE_TRAP) and c:IsNormalTrap() and c:IsSetCard(SET_TRAP_HOLE)
+    return c:IsType(TYPE_TRAP) and c:IsNormalTrap() and c:IsSetCard({SET_HOLE, SET_TRAP_HOLE})
 end
 
 function s.togravetg(e,tp,eg,ep,ev,re,r,rp,chk)
