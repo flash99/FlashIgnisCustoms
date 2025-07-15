@@ -83,8 +83,6 @@ end
 function s.thcon(e)
 	local c = e:GetHandler()
 	local tp = c:GetOwner()
-	Debug.Message(tp)
-	Debug.Message(Duel.IsExistingMatchingCard(s.thfilter, tp, 0, LOCATION_SZONE, 1, nil))
 	return Duel.IsExistingMatchingCard(s.thfilter, tp, 0, LOCATION_SZONE, 1, nil) and (c:GetReason() & REASON_MATERIAL + REASON_SYNCHRO) == REASON_MATERIAL + REASON_SYNCHRO
 end
 
