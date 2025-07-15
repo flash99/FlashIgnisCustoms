@@ -61,7 +61,7 @@ s.listed_series={SET_TRAPTRIX, SET_TRAP_HOLE, SET_HOLE}
 
 -- sealed condition
 function s.sealedcon(c)
-    return c:IsType(TYPE_MONSTER) and (c:IsRace(RACE_INSECT) or c:IsRace(RACE_PLANT)) and c:IsLevel(4)
+    return c:IsType(TYPE_MONSTER) and (c:IsRace(RACE_INSECT) or c:IsRace(RACE_PLANT))-- and c:IsLevel(4)
 end
 
 -- If this card was link summoned and if there is at least 1 "trap hole" normal trap card in GY
