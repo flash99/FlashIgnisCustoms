@@ -41,6 +41,17 @@ function s.initial_effect(c)
 	e3:SetTarget(s.distg)
 	e3:SetOperation(s.disop)
 	c:RegisterEffect(e3)
+
+	-- to hand
+	local e4 = Effect.CreateEffect(c)
+	e4:SetCategory(CATEGORY_TOHAND)
+	e4:SetType(EFFECT_TYPE_SINGLE + EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET + EFFECT_FLAG_DELAY)
+	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCondition(s.IsSyncSum)
+	e4:SetTarget(s.tohandtg)
+	e4:SetOperation(s.tohandop)
+	c:RegisterEffect(e4)
 end
 
 s.listed_series = {SET_TRAP_HOLE, SET_HOLE, SET_TRAPTRIX}
@@ -114,4 +125,19 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		c:RegisterFlagEffect(id, RESET_CHAIN, 0, 0)
 	end
+end
+
+function s.tohandfilter(c)
+	return c:IsNormalTrap() and c:IsSetCard({SET_HOLE, SET_TRAP_HOLE})
+end
+
+function s.tohandtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk == 0 then return Duel.IsExistingMatchingCard(s.tohandfilter, tp, LOCATION_REMOVED, 0, 1, nil) end
+end
+
+function s.tohandop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_RTOHAND)
+	local g = Duel.SelectMatchingCard(tp, s.tohandfilter, tp, LOCATION_REMOVED, 0, 1, 1, nil)
+	Duel.SendtoHand(g, tp, REASON_EFFECT)
+	Duel.ConfirmCards(tp, g)
 end
