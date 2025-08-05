@@ -107,7 +107,7 @@ end
 
 -- filter for "Traptrix" monster in GY
 function s.sumfilter(c, tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(SET_TRAPTRIX)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(SET_TRAPTRIX) and not c:IsCode(id)
 end
 
 
