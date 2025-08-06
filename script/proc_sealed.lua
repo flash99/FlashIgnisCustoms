@@ -30,6 +30,16 @@ function Sealed.AddProcedure(c, f, count)
     e1:SetTarget(Sealed.Target(c, f, count))
     e1:SetOperation(Sealed.Operation(c))
     c:RegisterEffect(e1)
+
+    -- Remove Synchro Type
+	local e2 = Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE + EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCondition(aux.TRUE)
+	e1:SetRange(LOCATION_ALL)
+    e2:SetCode(EFFECT_REMOVE_TYPE)
+	e2:SetValue(TYPE_SYNCHRO)
+	c:RegisterEffect(e2)
 end
 
 function Sealed.SpValue(value)
