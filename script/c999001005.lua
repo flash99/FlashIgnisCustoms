@@ -42,7 +42,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local cc = g:GetFirst()
 	if Duel.SwapControl(tc, cc, PHASE_END, 1) then
 		Debug.Message(cc:GetType())
-		if cc:IsType(TYPE_SYNCHRO) then
+		if cc:IsType(TYPE_SEALED) then
 			local c = e:GetHandler()
 			if not c:IsRelateToEffect(e) then return end
 			if c:IsSSetable(true) then
